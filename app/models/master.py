@@ -1,6 +1,9 @@
 from ..utils.database import db
 import uuid
 
+gfrom .salon import Salon
+from .experiences import Experience
+
 
 class Master(db.Model):
     __tablename__ = 'masters'
@@ -12,6 +15,10 @@ class Master(db.Model):
     experience_id = db.Column(db.Integer, db.ForeignKey('experiences.id'), nullable=False)
     photo_url = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
+
+    # Связи
+    salon = db.relationship(Salon, backref=db.backref('masters', lazy='dynamic'))
+    experience = db.relationship(Experience, backref=db.backref('masters', lazy='dynamic'))
 
     def __repr__(self):
         return f"<Master {self.id}>"
