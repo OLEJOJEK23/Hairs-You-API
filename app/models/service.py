@@ -1,6 +1,9 @@
 from ..utils.database import db
 import uuid
 
+from .salon import Salon
+from .service_names import ServiceName
+
 
 class Service(db.Model):
     __tablename__ = 'services'
@@ -11,6 +14,10 @@ class Service(db.Model):
     price = db.Column(db.Numeric(10, 2))
     duration = db.Column(db.Integer)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
+
+    # Связи
+    salon = db.relationship(Salon, backref=db.backref('services', lazy='dynamic'))
+    service_name = db.relationship(ServiceName, backref=db.backref('services', lazy='dynamic'))
 
     def __repr__(self):
         return f"<Service {self.id}>"
