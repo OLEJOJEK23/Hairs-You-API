@@ -27,8 +27,10 @@ def create_app():
     from .routes.countries import countries_bp
     from .routes.regions import regions_bp
     from .routes.cities import cities_bp
+    from .routes.salons import salons_bp
     app.register_blueprint(countries_bp, url_prefix='/api')
     app.register_blueprint(regions_bp, url_prefix='/api')
     app.register_blueprint(cities_bp, url_prefix='/api')
+    app.register_blueprint(salons_bp, url_prefix='/api')
 
     return app
