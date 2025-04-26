@@ -1,0 +1,12 @@
+from ..utils.database import db
+
+
+class ServiceName(db.Model):
+    __tablename__ = 'service_names'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, nullable=False, unique=True)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f"<ServiceName {self.name}>"
