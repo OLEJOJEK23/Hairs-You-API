@@ -1,4 +1,5 @@
 from flask import Flask
+
 from .utils.database import db, ma
 from .utils.logging import setup_logging
 from .utils.error_handler import register_error_handlers

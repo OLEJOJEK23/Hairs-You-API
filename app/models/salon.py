@@ -17,8 +17,5 @@ class Salon(db.Model):
     photo_url = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
 
-    # Связь с городом
-    city = db.relationship('City', backref='salons')
-
     def __repr__(self):
         return f"<Salon {self.name}>"
