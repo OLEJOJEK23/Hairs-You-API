@@ -109,3 +109,71 @@ def get_master_by_id(id):
     result = master_schema.dump(master)
 
     return jsonify(result), 200
+
+
+@masters_bp.route('/masters/<id>', methods=['PUT'])
+def update_master(id):
+    """
+    Обновление информации о мастере по ID.
+    """
+    # Проверка на валидный UUID
+    try:
+        master_id = uuid.UUID(id)
+    except ValueError:
+        raise NotFound("Invalid ID: must be a valid UUID")
+
+    # Поиск мастера в базе данных
+    master = Master.query.get(master_id)
+    if not master:
+        raise NotFound("Master not found")
+
+    # Получение данных из запроса
+    data = request.get_json()
+    if not data:
+        raise BadRequest("No data provided")
+
+    # Обновление полей мастера
+    master.full_name = data.get("full_name", master.full_name)
+    master.description = data.get("description", master.description)
+    master.photo_url = data.get("photo_url", master.photo_url)
+    experience_id = data.get("experience_id")
+    if experience_id:
+        master.experience_id = experience_id
+    salon_id = data.get("salon_id")
+    if salon_id:
+        try:
+            master.salon_id = uuid.UUID(salon_id)
+        except ValueError:
+            raise BadRequest("Invalid salon_id: must be a valid UUID")
+
+    # Сохранение изменений в базе данных
+    db.session.commit()
+
+    # Сериализация результата
+    master_schema = MasterSchema()
+    result = master_schema.dump(master)
+
+    return jsonify(result), 200
+
+
+@masters_bp.route('/masters/<id>', methods=['DELETE'])
+def delete_master(id):
+    """
+    Удаление мастера по ID.
+    """
+    # Проверка на валидный UUID
+    try:
+        master_id = uuid.UUID(id)
+    except ValueError:
+        raise NotFound("Invalid ID: must be a valid UUID")
+
+    # Поиск мастера в базе данных
+    master = Master.query.get(master_id)
+    if not master:
+        raise NotFound("Master not found")
+
+    # Удаление мастера из базы данных
+    db.session.delete(master)
+    db.session.commit()
+
+    return jsonify({"message": "Master deleted successfully"}), 200
