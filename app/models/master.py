@@ -1,7 +1,7 @@
 from ..utils.database import db
 import uuid
 
-gfrom .salon import Salon
+from .salon import Salon
 from .experiences import Experience
 
 

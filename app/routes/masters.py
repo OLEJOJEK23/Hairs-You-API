@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
 from ..models.master import Master
 from ..schemas.master import MasterSchema
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 import uuid
+from ..utils.database import db
 
 masters_bp = Blueprint('masters', __name__)
 
@@ -34,4 +35,77 @@ def get_masters():
     # Сериализация результата
     master_schema = MasterSchema(many=True)
     result = master_schema.dump(masters)
+    return jsonify(result), 200
+
+
+@masters_bp.route('/masters', methods=['POST'])
+def create_master():
+    """
+    Создает нового мастера на основе данных из запроса.
+    """
+    try:
+        # Получение данных из запроса
+        data = request.get_json()
+        if not data:
+            raise BadRequest("No data provided")
+
+        # Валидация данных
+        full_name = data.get("full_name")
+        salon_id = data.get("salon_id")
+        experience_id = data.get("experience_id")
+        description = data.get("description", "")
+        photo_url = data.get("photo_url", "")
+
+        if not full_name or not salon_id or not experience_id:
+            raise BadRequest("Fields 'full_name', 'salon_id', and 'experience_id' are required")
+
+        # Проверка валидности salon_id
+        try:
+            salon_uuid = uuid.UUID(salon_id)
+        except ValueError:
+            raise BadRequest("Invalid salon_id: must be a valid UUID")
+
+        # Создание нового мастера
+        new_master = Master(
+            full_name=full_name,
+            salon_id=salon_uuid,
+            experience_id=experience_id,
+            description=description,
+            photo_url=photo_url
+        )
+
+        # Сохранение в базе данных
+        db.session.add(new_master)
+        db.session.commit()
+
+        # Сериализация результата
+        master_schema = MasterSchema()
+        result = master_schema.dump(new_master)
+
+        return jsonify(result), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@masters_bp.route('/masters/<id>', methods=['GET'])
+def get_master_by_id(id):
+    """
+    Получение информации о мастере по ID.
+    """
+    # Проверка на валидный UUID
+    try:
+        master_id = uuid.UUID(id)
+    except ValueError:
+        raise NotFound("Invalid ID: must be a valid UUID")
+
+    # Поиск мастера в базе данных
+    master = Master.query.get(master_id)
+    if not master:
+        raise NotFound("Master not found")
+
+    # Сериализация результата
+    master_schema = MasterSchema()
+    result = master_schema.dump(master)
+
     return jsonify(result), 200
