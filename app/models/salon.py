@@ -12,9 +12,9 @@ class Salon(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    description = db.Column(db.Text)
+    description = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Numeric(3, 1), default=0.0, nullable=False)
-    photo_url = db.Column(db.Text)
+    photo_url = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
 
     def __repr__(self):
