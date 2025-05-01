@@ -1,5 +1,6 @@
 from ..utils.database import ma
 from ..models.salon import Salon
+from marshmallow import fields
 
 
 class ShortSalonSchema(ma.SQLAlchemyAutoSchema):
@@ -7,3 +8,5 @@ class ShortSalonSchema(ma.SQLAlchemyAutoSchema):
         model = Salon
         load_instance = True
         fields = ("name", "street_address", "description", "photo_url", "id", "rating")
+
+    rating = fields.Float()
