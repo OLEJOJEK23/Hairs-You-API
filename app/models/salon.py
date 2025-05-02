@@ -1,3 +1,4 @@
+from .city import City
 from ..utils.database import db
 import uuid
 
@@ -16,6 +17,8 @@ class Salon(db.Model):
     rating = db.Column(db.Numeric(3, 1), default=0.0, nullable=False)
     photo_url = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
+
+    city = db.relationship(City, backref='salons')
 
     def __repr__(self):
         return f"<Salon {self.name}>"
