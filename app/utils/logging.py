@@ -8,8 +8,8 @@ def setup_logging():
     # Очистка стандартных обработчиков loguru
     logger.remove()
 
-    # Формат логов
-    log_format = "{time:YYYY-MM-DD HH:mm:ss} | {level} | {module}:{function}:{line} | {message}"
+    # Формат логов с IP-адресом
+    log_format = "{time:YYYY-MM-DD HH:mm:ss} | {level}  | Client IP: {extra[client_ip]} | {message}"
 
     # Логирование в консоль (DEBUG и выше)
     logger.add(sys.stderr, format=log_format, level="DEBUG")
