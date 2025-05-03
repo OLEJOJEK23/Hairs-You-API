@@ -16,6 +16,8 @@ class Salon(db.Model):
     description = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Numeric(3, 1), default=0.0, nullable=False)
     photo_url = db.Column(db.Text, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False, )
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
 
     city = db.relationship(City, backref='salons')
