@@ -1,4 +1,5 @@
 from .city import City
+from .establishment_type import EstablishmentType
 from ..utils.database import db
 import uuid
 
@@ -11,6 +12,7 @@ class Salon(db.Model):
     name = db.Column(db.String(255), nullable=False)
     street_address = db.Column(db.Text, nullable=False)
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
+    establishment_type_id = db.Column(db.Integer, db.ForeignKey('establishment_types.id'), nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
@@ -21,6 +23,7 @@ class Salon(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
 
     city = db.relationship(City, backref='salons')
+    establishment_type = db.relationship(EstablishmentType, backref='salons')
 
     def __repr__(self):
         return f"<Salon {self.name}>"
