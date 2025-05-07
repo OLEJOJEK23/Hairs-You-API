@@ -13,6 +13,7 @@ def get_masters():
     # Получение query-параметров для фильтрации
     salon_id = request.args.get('salon_id', type=str)
     experience_id = request.args.get('experience_id', type=int)
+    user_id = request.args.get('user_id', type=str)
 
     # Базовый запрос
     query = Master.query
@@ -33,7 +34,10 @@ def get_masters():
     masters = query.all()
 
     # Сериализация результата
-    master_schema = MasterSchema(many=True)
+    if user_id:
+        master_schema = MasterSchema(many=True, context={'user_id': user_id})
+    else:
+        master_schema = MasterSchema(many=True)
     result = master_schema.dump(masters)
     return jsonify(result), 200
 
@@ -86,29 +90,6 @@ def create_master():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-
-@masters_bp.route('/masters/<id>', methods=['GET'])
-def get_master_by_id(id):
-    """
-    Получение информации о мастере по ID.
-    """
-    # Проверка на валидный UUID
-    try:
-        master_id = uuid.UUID(id)
-    except ValueError:
-        raise NotFound("Invalid ID: must be a valid UUID")
-
-    # Поиск мастера в базе данных
-    master = Master.query.get(master_id)
-    if not master:
-        raise NotFound("Master not found")
-
-    # Сериализация результата
-    master_schema = MasterSchema()
-    result = master_schema.dump(master)
-
-    return jsonify(result), 200
 
 
 @masters_bp.route('/masters/<id>', methods=['PUT'])
