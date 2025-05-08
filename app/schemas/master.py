@@ -8,7 +8,7 @@ class MasterSchema(ma.SQLAlchemyAutoSchema):
         model = Master
         load_instance = True
         include_fk = True
-        fields = ("id", "full_name", "salon_id", "description", "experience", "is_favorite", "photo_url", "created_at")
+        fields = ("id", "full_name", "description", "experience", "is_favorite", "photo_url", "created_at")
 
     experience = ma.Function(lambda obj: obj.experience.name if obj.experience else None)
     is_favorite = ma.Method("get_is_favorite")

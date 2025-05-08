@@ -14,6 +14,7 @@ def get_masters():
     salon_id = request.args.get('salon_id', type=str)
     experience_id = request.args.get('experience_id', type=int)
     user_id = request.args.get('user_id', type=str)
+    master_id = request.args.get('master_id', type=str)
 
     # Базовый запрос
     query = Master.query
@@ -23,6 +24,13 @@ def get_masters():
         try:
             salon_uuid = uuid.UUID(salon_id)
             query = query.filter_by(salon_id=salon_uuid)
+        except ValueError:
+            raise BadRequest("Invalid salon_id: must be a valid UUID")
+
+    if master_id:
+        try:
+            master_uuid = uuid.UUID(master_id)
+            query = query.filter_by(id=master_uuid)
         except ValueError:
             raise BadRequest("Invalid salon_id: must be a valid UUID")
 
