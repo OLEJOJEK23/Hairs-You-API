@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..models.city import City
 from ..schemas.city import CitySchema
-from ..utils.database import db
 
 cities_bp = Blueprint('cities', __name__)
 
