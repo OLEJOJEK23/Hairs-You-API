@@ -37,6 +37,7 @@ def create_app():
     from .routes.reviews import reviews_bp
     from .routes.users import users_bp
     from .routes.establishment_types import establishment_types_bp
+    from .routes.favorites import favorites_bp
     app.register_blueprint(countries_bp, url_prefix='/api')
     app.register_blueprint(regions_bp, url_prefix='/api')
     app.register_blueprint(cities_bp, url_prefix='/api')
@@ -49,5 +50,5 @@ def create_app():
     app.register_blueprint(reviews_bp, url_prefix='/api')
     app.register_blueprint(establishment_types_bp, url_prefix='/api')
     app.register_blueprint(users_bp, url_prefix='/api')
-
+    app.register_blueprint(favorites_bp, url_prefix='/api')
     return app
