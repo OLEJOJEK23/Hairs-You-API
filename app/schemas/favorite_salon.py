@@ -1,6 +1,5 @@
 from ..models.favorite_salon import FavoriteSalon
 from ..utils.database import ma
-from marshmallow import fields
 
 
 class FavoriteSalonSchema(ma.SQLAlchemyAutoSchema):

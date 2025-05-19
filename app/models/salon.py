@@ -1,5 +1,6 @@
 from .city import City
 from .establishment_type import EstablishmentType
+from .photo import Photo
 from ..utils.database import db
 import uuid
 
@@ -24,6 +25,11 @@ class Salon(db.Model):
 
     city = db.relationship(City, backref='salons')
     establishment_type = db.relationship(EstablishmentType, backref='salons')
+    photos = db.relationship(
+        'Photo',
+        backref='salon',
+        lazy='select',
+        primaryjoin="and_(Photo.entity_type == 'salon',Photo.entity_id == foreign(Salon.id))")
 
     def __repr__(self):
         return f"<Salon {self.name}>"

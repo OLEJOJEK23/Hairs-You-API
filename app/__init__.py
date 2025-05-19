@@ -1,5 +1,6 @@
 from flask import Flask
 
+from .utils.cloudinary import init_cloudinary
 from .utils.database import db, ma
 from .utils.logging import setup_logging
 from .utils.error_handler import register_error_handlers
@@ -10,12 +11,15 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Инициализация логирования
-    logger = setup_logging()
-
     # Инициализация расширений
     db.init_app(app)
     ma.init_app(app)
+
+    # Инициализация логирования
+    logger = setup_logging()
+
+    # Инициализация Cloudinary
+    init_cloudinary()
 
     # Создание таблиц в контексте приложения
     with app.app_context():
@@ -38,6 +42,8 @@ def create_app():
     from .routes.users import users_bp
     from .routes.establishment_types import establishment_types_bp
     from .routes.favorites import favorites_bp
+    from .routes.photos import photos_bp
+
     app.register_blueprint(countries_bp, url_prefix='/api')
     app.register_blueprint(regions_bp, url_prefix='/api')
     app.register_blueprint(cities_bp, url_prefix='/api')
@@ -51,4 +57,5 @@ def create_app():
     app.register_blueprint(establishment_types_bp, url_prefix='/api')
     app.register_blueprint(users_bp, url_prefix='/api')
     app.register_blueprint(favorites_bp, url_prefix='/api')
+    app.register_blueprint(photos_bp, url_prefix='/api')
     return app

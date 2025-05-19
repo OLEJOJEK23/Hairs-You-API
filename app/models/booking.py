@@ -20,7 +20,6 @@ class Booking(db.Model):
     status = db.Column(db.String(20), nullable=False, default='pending')
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.current_timestamp())
 
-    # Связи без lazy='dynamic' для многие-к-одному
     user = db.relationship(User, backref=db.backref('bookings', lazy='dynamic'))
     salon = db.relationship(Salon, backref=db.backref('bookings', lazy='dynamic'))
     service = db.relationship(Service, backref=db.backref('bookings', lazy='dynamic'))

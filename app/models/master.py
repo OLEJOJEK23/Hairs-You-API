@@ -19,6 +19,12 @@ class Master(db.Model):
     # Связи
     salon = db.relationship(Salon, backref=db.backref('masters', lazy='dynamic'))
     experience = db.relationship(Experience, backref=db.backref('masters', lazy='dynamic'))
+    photos = db.relationship(
+        'Photo',
+        backref='master',
+        lazy='select',  # Используем select вместо dynamic
+        primaryjoin="and_(Photo.entity_type == 'master',Photo.entity_id == foreign(Master.id))"
+    )
 
     def __repr__(self):
         return f"<Master {self.id}>"
